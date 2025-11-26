@@ -1,0 +1,232 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neural Networks – Practice Quiz</title>
+<style>
+  :root{--base:16;--gap:6;--pad:8;}
+  html,body{height:100%;}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,sans-serif;font-size:calc(var(--base) * 1px);line-height:1.25;}
+  .bar{position:sticky;top:0;display:flex;gap:.5rem;align-items:center;padding:.5rem;border-bottom:1px solid #ddd;background:#fff;z-index:10}
+  .bar label{font-weight:600}
+  .legend{display:flex;gap:12px;flex-wrap:wrap;padding:4px 8px;font-size:12px;align-items:center;border-bottom:1px solid #eee;background:#fafafa}
+  .legend .swatch{display:inline-block;width:14px;height:14px;border:1px solid #555;border-radius:50%;margin-right:4px;vertical-align:middle}
+  .swatch.bias{background:#cfe8ff}
+  .swatch.relu{background:#ffb3b3}
+  .swatch.sigmoid{background:#ffe66a}
+  .grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:calc(var(--gap) * 1px);padding:calc(var(--gap) * 1px);}
+  .card{border:1px solid #ccc;border-radius:6px;padding:calc(var(--pad) * 1px);background:#f9f9f9;}
+  .wide{grid-column:span 2;}
+  .weights{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;font-size:11px;}
+  .weights table{border-collapse:collapse;}
+  .weights td{border:1px solid #ccc;padding:2px 4px;min-width:28px;text-align:center;}
+  .wlab{font-weight:600;width:100%;}
+  .q{margin:0;}
+  .num{font-size:.85em;color:#666;margin-bottom:.4em;}
+  @media (max-width:1100px){.grid{grid-template-columns:repeat(4,1fr);} }
+  @media (max-width:820px){.grid{grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:620px){.grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:420px){.grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+  <div class="bar" role="region" aria-label="Controls">
+    <label for="size">Font size</label>
+    <input id="size" type="range" min="12" max="28" value="16" step="1" aria-label="Font size slider">
+    <output id="sizeOut" for="size">16px</output>
+  </div>
+  <div class="legend" role="note" aria-label="Node color legend">
+    <span><span class="swatch bias" aria-hidden="true"></span>Bias / input</span>
+    <span><span class="swatch relu" aria-hidden="true"></span>ReLU hidden unit</span>
+    <span><span class="swatch sigmoid" aria-hidden="true"></span>Sigmoid output</span>
+  </div>
+
+  <main class="grid" id="grid" role="grid" aria-label="Quiz questions">
+    <!-- Add questions here as needed; each question card should be a
+         <section class="card" role="gridcell"> with a short label and text -->
+
+    <!-- Example: Q1 with a tiny inline SVG diagram (2 inputs -> 1 output) -->
+    <section class="card" role="gridcell">
+      <div class="num">Q1</div>
+      <svg viewBox="0 0 200 100" width="100%" height="auto" aria-label="2-input to 1-output network diagram" role="img">
+        <defs>
+          <style>
+            .n{fill:#fff;stroke:#555;stroke-width:1}
+            .nb{fill:#cfe8ff;stroke:#555;stroke-width:1}
+            .e{stroke:#777;stroke-width:1}
+            .t{font-size:12px;fill:#333;font-family:inherit}
+            .w{font-size:10px;fill:#333;font-family:inherit}
+          </style>
+        </defs>
+        <!-- nodes -->
+        <circle class="nb" cx="40" cy="30" r="12"></circle>
+        <circle class="n" cx="40" cy="70" r="12"></circle>
+        <circle class="n" cx="160" cy="50" r="14"></circle>
+        <!-- edges -->
+        <line class="e" x1="52" y1="30" x2="146" y2="50"></line>
+        <line class="e" x1="52" y1="70" x2="146" y2="50"></line>
+        <!-- edge weights (integers) -->
+        <text class="w" x="100" y="38" text-anchor="middle">2</text>
+        <text class="w" x="100" y="58" text-anchor="middle">1</text>
+        <!-- labels -->
+        <text class="t" x="40" y="30" text-anchor="middle" dy="4">1</text>
+        <text class="t" x="40" y="70" text-anchor="middle" dy="4">x₁</text>
+        <text class="t" x="160" y="50" text-anchor="middle" dy="5">ŷ</text>
+      </svg>
+      <p class="q">Given the point (x, y) = (3, -2), compute the network output ŷ.</p>
+      <button class="reveal" aria-controls="a1" aria-expanded="false">Show answer</button>
+      <p id="a1" class="answer" hidden>With weights 2 (bias) and 1 (x₁): z = 2·1 + 1·x = 2 + x = 2 + 3 = 5, so ŷ = 5.</p>
+    </section>
+
+    <!-- Q2: 3 inputs (1, x₁, x₂) -> 1 output, integer weights -->
+    <section class="card" role="gridcell">
+      <div class="num">Q2</div>
+      <svg viewBox="0 0 240 120" width="100%" height="auto" aria-label="3-input to 1-output network diagram" role="img">
+        <defs>
+          <style>
+            .n{fill:#fff;stroke:#555;stroke-width:1}
+            .nb{fill:#cfe8ff;stroke:#555;stroke-width:1}
+            .e{stroke:#777;stroke-width:1}
+            .t{font-size:12px;fill:#333;font-family:inherit}
+            .w{font-size:10px;fill:#333;font-family:inherit}
+          </style>
+        </defs>
+        <!-- nodes -->
+        <circle class="nb" cx="40" cy="25" r="12"></circle>
+        <circle class="n" cx="40" cy="60" r="12"></circle>
+        <circle class="n" cx="40" cy="95" r="12"></circle>
+        <circle class="n" cx="190" cy="60" r="14"></circle>
+        <!-- edges -->
+        <line class="e" x1="52" y1="25" x2="176" y2="60"></line>
+        <line class="e" x1="52" y1="60" x2="176" y2="60"></line>
+        <line class="e" x1="52" y1="95" x2="176" y2="60"></line>
+        <!-- edge weights (integers) -->
+        <text class="w" x="102" y="32" text-anchor="middle">1</text>
+        <text class="w" x="104" y="54" text-anchor="middle">2</text>
+        <text class="w" x="98" y="74" text-anchor="middle">-1</text>
+        <!-- labels -->
+        <text class="t" x="40" y="25" text-anchor="middle" dy="4">1</text>
+        <text class="t" x="40" y="60" text-anchor="middle" dy="4">x₁</text>
+        <text class="t" x="40" y="95" text-anchor="middle" dy="4">x₂</text>
+        <text class="t" x="190" y="60" text-anchor="middle" dy="5">ŷ</text>
+      </svg>
+      <p class="q">Given the point (x₁, x₂, y) = (2, -1, 3), compute the network output ŷ.</p>
+      <button class="reveal" aria-controls="a2" aria-expanded="false">Show answer</button>
+      <p id="a2" class="answer" hidden>Weights: 1 (bias), 2 (x₁), −1 (x₂). z = 1·1 + 2·x₁ + (−1)·x₂ = 1 + 2·2 + (−1)·(−1) = 1 + 4 + 1 = 6, so ŷ = 6.</p>
+    </section>
+
+    <!-- Q3: 2 inputs (1, x₁) -> 1 sigmoid output (yellow) -->
+    <section class="card" role="gridcell">
+      <div class="num">Q3</div>
+      <svg viewBox="0 0 200 90" width="100%" height="auto" aria-label="2-input to 1-output sigmoid network" role="img">
+        <defs>
+          <style>
+            .n{fill:#fff;stroke:#555;stroke-width:1}
+            .nb{fill:#cfe8ff;stroke:#555;stroke-width:1}
+            .ny{fill:#ffe66a;stroke:#555;stroke-width:1}
+            .e{stroke:#777;stroke-width:1}
+            .t{font-size:12px;fill:#333;font-family:inherit}
+            .w{font-size:10px;fill:#333;font-family:inherit}
+          </style>
+        </defs>
+        <!-- nodes -->
+        <circle class="nb" cx="40" cy="25" r="12"></circle>
+        <circle class="n" cx="40" cy="65" r="12"></circle>
+        <circle class="ny" cx="160" cy="45" r="14"></circle>
+        <!-- edges -->
+        <line class="e" x1="52" y1="25" x2="146" y2="45"></line>
+        <line class="e" x1="52" y1="65" x2="146" y2="45"></line>
+        <!-- weights -->
+        <text class="w" x="92" y="28" text-anchor="middle">2</text>
+        <text class="w" x="86" y="54" text-anchor="middle">-1</text>
+        <!-- labels -->
+        <text class="t" x="40" y="25" text-anchor="middle" dy="4">1</text>
+        <text class="t" x="40" y="65" text-anchor="middle" dy="4">x₁</text>
+        <text class="t" x="160" y="45" text-anchor="middle" dy="5">ŷ</text>
+      </svg>
+      <p class="q">Given the point (x₁, y) = (3, 0), compute the sigmoid output ŷ.</p>
+      <button class="reveal" aria-controls="a3" aria-expanded="false">Show answer</button>
+      <p id="a3" class="answer" hidden>Weights: 2 (bias), −1 (x₁). z = 2·1 + (−1)·x₁. For x₁ = 3: z = 2·1 + (−1)·3. ŷ = σ(2·1 + (−1)·3) = 1/(1 + e^{-(2·1 + (−1)·3)}).</p>
+    </section>
+
+    <!-- Q4: Input bias + feature -> Hidden layer (bias + 3 ReLU) -> Sigmoid output -->
+    <section class="card wide" role="gridcell">
+      <div class="num">Q4</div>
+      <!-- Condensed layout to free vertical space for text below -->
+      <svg viewBox="0 0 180 110" width="100%" height="auto" aria-label="2-input, hidden layer with bias and 3 ReLU units, sigmoid output" role="img">
+        <defs>
+          <style>
+            .n{fill:#fff;stroke:#555;stroke-width:1}
+            .nb{fill:#cfe8ff;stroke:#555;stroke-width:1} /* light blue = bias */
+            .nr{fill:#ffb3b3;stroke:#555;stroke-width:1} /* red = ReLU */
+            .ny{fill:#ffe66a;stroke:#555;stroke-width:1} /* yellow = sigmoid */
+            .e{stroke:#777;stroke-width:1}
+            .t{font-size:12px;fill:#333;font-family:inherit}
+          </style>
+        </defs>
+        <!-- Input layer -->
+        <circle class="nb" cx="20" cy="40" r="8"></circle>
+        <circle class="n" cx="20" cy="80" r="8"></circle>
+        <text class="t" x="20" y="40" text-anchor="middle" dy="4">1</text>
+        <text class="t" x="20" y="80" text-anchor="middle" dy="4">x₁</text>
+        <!-- Hidden layer (bias + 3 ReLU) -->
+        <circle class="nb" cx="85" cy="15" r="8"></circle>
+        <circle class="nr" cx="85" cy="40" r="10"></circle>
+        <circle class="nr" cx="85" cy="70" r="10"></circle>
+        <circle class="nr" cx="85" cy="100" r="10"></circle>
+        <text class="t" x="85" y="15" text-anchor="middle" dy="4">1</text>
+        <text class="t" x="85" y="40" text-anchor="middle" dy="5">h₁</text>
+        <text class="t" x="85" y="70" text-anchor="middle" dy="5">h₂</text>
+        <text class="t" x="85" y="100" text-anchor="middle" dy="5">h₃</text>
+        <!-- Output -->
+        <circle class="ny" cx="150" cy="60" r="12"></circle>
+        <text class="t" x="150" y="60" text-anchor="middle" dy="5">ŷ</text>
+        <!-- Edges input -> hidden (excluding hidden bias) -->
+        <line class="e" x1="28" y1="40" x2="75" y2="40"></line>
+        <line class="e" x1="28" y1="40" x2="75" y2="70"></line>
+        <line class="e" x1="28" y1="40" x2="75" y2="100"></line>
+        <line class="e" x1="28" y1="80" x2="75" y2="40"></line>
+        <line class="e" x1="28" y1="80" x2="75" y2="70"></line>
+        <line class="e" x1="28" y1="80" x2="75" y2="100"></line>
+        <!-- Edges hidden (incl. bias) -> output -->
+        <line class="e" x1="93" y1="15" x2="138" y2="60"></line>
+        <line class="e" x1="95" y1="40" x2="138" y2="60"></line>
+        <line class="e" x1="95" y1="70" x2="138" y2="60"></line>
+        <line class="e" x1="95" y1="100" x2="138" y2="60"></line>
+      </svg>
+      <div class="weights" aria-label="Layer weights">
+        <div class="wlab">w¹ (2×3) – first row bias weights, second row feature x₁</div>
+        <table aria-label="First layer weights 2 by 3">
+          <tr><td>1</td><td>-2</td><td>0</td></tr>
+          <tr><td>3</td><td>1</td><td>-1</td></tr>
+        </table>
+        <div class="wlab">w² (4×1) – top element is hidden-layer bias weight</div>
+        <table aria-label="Second layer column weights">
+          <tr><td>2</td></tr>
+          <tr><td>-1</td></tr>
+          <tr><td>1</td></tr>
+          <tr><td>4</td></tr>
+        </table>
+      </div>
+      <p class="q">Given the point (x, y) = (2, 0), compute the hidden activations h₁, h₂, h₃ after ReLU.</p>
+      <button class="reveal" aria-controls="a4" aria-expanded="false">Show answer</button>
+      <p id="a4" class="answer" hidden>Using w¹ columns: z₁ = 1 + 3·2 = 7 ⇒ h₁ = 7; z₂ = (−2) + 1·2 = 0 ⇒ h₂ = 0; z₃ = 0 + (−1)·2 = −2 ⇒ h₃ = 0. So (h₁, h₂, h₃) = (7, 0, 0).</p>
+    </section>
+  </main>
+
+<script>
+  const size = document.getElementById('size');
+  const out = document.getElementById('sizeOut');
+  const setSize = v => { document.documentElement.style.setProperty('--base', v); out.textContent = v + 'px'; };
+  size.addEventListener('input', e => setSize(e.target.value));
+  setSize(size.value);
+
+  // Reveal answer toggles (minimal JS, works per card)
+  document.querySelectorAll('.reveal').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id = btn.getAttribute('aria-controls');
+      const ans = document.getElementById(id);
+      const isHidden = ans.hasAttribute('hidden');
+      if(isHidden){ ans.removeAttribute('hidden'); btn.textContent='Hide answer'; btn.setAttribute('aria-expanded','true'); }
+      else{ ans.setAttribute('hidden',''); btn.textContent='Show answer'; btn.setAttribute('aria-expanded','false'); }
+    });
+  });
+</script>
+</body></html>
